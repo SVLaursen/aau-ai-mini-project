@@ -20,22 +20,6 @@
 
 from AStar import *
 
-world = [
-    ['#', '#', '#', '#', '#', '#'],
-    ['#', ' ', ' ', ' ', ' ', '#'],
-    ['#', ' ', ' ', ' ', ' ', '#'],
-    ['#', ' ', ' ', ' ', ' ', '#'],
-    ['#', ' ', ' ', ' ', ' ', '#'],
-    ['#', ' ', ' ', ' ', ' ', '#'],
-    ['#', ' ', ' ', ' ', ' ', '#'],
-    ['#', ' ', ' ', ' ', ' ', '#'],
-    ['#', '#', '#', '#', '#', '#']
-]
-
-#for i in range(len(world)):
-    #print(world[i])
-
-
 maze = [
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
@@ -43,29 +27,27 @@ maze = [
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
 
+from MapConversion import *
+
+#Map is 10x10 making (9,9) the extreme point
 start = (0, 0)
-end = (7, 6)
+end = (9, 5)
 
 path = AStar(maze, start, end)
 
-from termcolor import colored
+for i in range(len(maze)):
+    print(maze[i])
 
-pathList = [list(i) for i in path]
+newMap = ConvertAStarMap(maze, path)
 
-for y in range(len(maze)):
-    for x in range(len(maze[y])):
-        for p in range(len(pathList)):
-            pos_x = pathList[p][0]
-            pos_y = pathList[p][1]
+for i in range(len(newMap)):
+    print(newMap[i])
 
-            if pos_x == x and pos_y == y:
-                print('-> (' + str(x) + ', ' + str(y) + ')')
-
-print(pathList)
-print(path)
+#print(pathList)
+#print(path)
