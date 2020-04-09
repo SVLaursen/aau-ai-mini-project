@@ -1,4 +1,4 @@
-class Player():
+class Player(object):
     posX = 1
     posY = 1
 

@@ -18,7 +18,7 @@
 # TODO: Find a way to color the array output so that the player can see where the agent will go according to A*
 # TODO: Implement A* pathfinding for the agent
 
-from Agent import Agent
+from AStar import *
 
 world = [
     ['#', '#', '#', '#', '#', '#'],
@@ -32,5 +32,40 @@ world = [
     ['#', '#', '#', '#', '#', '#']
 ]
 
-for i in range(len(world)):
-    print(world[i])
+#for i in range(len(world)):
+    #print(world[i])
+
+
+maze = [
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+
+start = (0, 0)
+end = (7, 6)
+
+path = AStar(maze, start, end)
+
+from termcolor import colored
+
+pathList = [list(i) for i in path]
+
+for y in range(len(maze)):
+    for x in range(len(maze[y])):
+        for p in range(len(pathList)):
+            pos_x = pathList[p][0]
+            pos_y = pathList[p][1]
+
+            if pos_x == x and pos_y == y:
+                print('-> (' + str(x) + ', ' + str(y) + ')')
+
+print(pathList)
+print(path)
