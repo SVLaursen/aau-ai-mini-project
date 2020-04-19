@@ -10,112 +10,148 @@
 
 # A = Agent, P = Player, # = Border, * = Path point, ^ = Obstacle
 
-# TODO: Create finite state machine for the Agent
-# TODO: Create player class
-# TODO: Parse string inputs for the player input
-# TODO: Print out the different states as the agent goes through them
-# TODO: Find a way to color the array output so that the player can see where the agent will go according to A*
-# TODO: Implement A* pathfinding for the agent
-
-from AStar import *
 from MapConversion import *
 from Player import *
 from Agent import *
 
+def print_maze(path = None):
+    # Create the map to print
+    for x in range(len(maze)):
+        for y in range(len(maze[x])):
+            if x == player.x and y == player.y:
+                maze[x][y] = 3
+            elif maze[x][y] == 3 and x != player.x and y != player.y:
+                maze[x][y] = 0
 
-maze = [
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ]
+            if path is not None:
+                for i in range(len(pathlist)):
+                    if i == 0:
+                        continue
+                    if x == pathlist[i][0] and y == pathlist[i][1] and maze[x][y] != 3:
+                        maze[x][y] = 2
 
-#Map is 10x10 making (9,9) the extreme point
-start = (0, 0)
-end = (9, 5)
+            if x == agent.x and y == agent.y:
+                maze[x][y] = 4
 
-#Set player
-player = Player()
-player.world = maze
-player.x = 7
-player.y = 5
+    # make a pretty map to display
+    prettyMaze = ConvertNumbersToMap(maze)
 
-#Set the agent
-agent = Agent()
-agent.__init__()
-agent.world = maze
+    # Print the map
+    for i in range(len(prettyMaze)):
+        print(prettyMaze[i])
 
-active = True
-inputActive = False
+print('Welcome to this showcase of the A* algorithm and Finite State Machine')
+print('write start to start, exit to exit, and help if you want to know more')
 
-#Start runtime loop
-while active:
+inMenu = True
+terminate = False
 
-    #Executing agent behaviour
-    agent.execute()
-    agent.target = (player.x, player.y)
+while inMenu:
+    menuInput = input('-->')
 
-    if inputActive == False:
-        # Clean the map before usage
-        for x in range(len(maze)):
-            for y in range(len(maze[x])):
-                if maze[x][y] == 2 or maze[x][y] == 3 or maze[x][y] == 4:
-                    maze[x][y] = 0
+    if menuInput == "start":
+        inMenu = False
+    elif menuInput == "exit":
+        terminate = True
+        inMenu = False
+    elif menuInput == "help":
+        print('play the game by writen: up, down, left, or right to move around')
+        print('the goal is not to get caught by the agent, marked with an A')
+        print('you play as the P on the map')
+        print('# marks obstacles')
+        print('good luck')
+    else:
+        print('!!Error on input, try a different command!!')
 
-        if isinstance(agent.fsm.currentState, MoveState):
-            continue
 
-        if isinstance(agent.fsm.currentState, WaitState):
-            agent.activate()
-            continue
+if not terminate:
 
-        #path = AStar(maze, start, (player.x, player.y))
-        path = agent.path
+    maze = [
+                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ]
 
-        if path is not None:
-            pathlist = [list(i) for i in path]
+    #Map is 10x10 making (9,9) the extreme point
+    start = (0, 0)
+    end = (9, 5)
 
-        #Create the map to print
-        for x in range(len(maze)):
-            for y in range(len(maze[x])):
-                if x == player.x and y == player.y:
-                    maze[x][y] = 3
-                elif maze[x][y] == 3 and x != player.x and y != player.y:
-                    maze[x][y] = 0
+    #Set player
+    player = Player()
+    player.world = maze
+    player.x = 7
+    player.y = 5
 
-                if path is not None:
-                    for i in range(len(pathlist)):
-                        if x == pathlist[i][0] and y == pathlist[i][1] and maze[x][y] != 3:
-                            maze[x][y] = 2
+    #Set the agent
+    agent = Agent()
+    agent.world = maze
 
-                if x == agent.x and y == agent.y:
-                    maze[x][y] = 4
-
-        #Print the map
-        for i in range(len(maze)):
-            print(maze[i])
-
+    active = True
     inputActive = True
+    start_print = False
+    turns = 0
 
-    while inputActive:
-        userInput = input('-->')
-        if userInput == "left" or userInput == "right" or userInput == "up" or userInput == "down":
-            player.userInput = userInput
-            if player.ParseInput():
+    #Start runtime loop
+    while active:
+
+        #Executing agent behaviour
+        agent.execute()
+        agent.target = (player.x, player.y)
+
+        if not start_print:
+            print_maze()
+            start_print = True
+
+        if inputActive == False:
+            #Check if the agent has caught the player
+            if agent.x == player.x and agent.y == player.y:
+                print('AGENT HAS CAUGHT YOU, GAME OVER!')
+                active = False
+
+            # Clean the map before usage
+            for x in range(len(maze)):
+                for y in range(len(maze[x])):
+                    if maze[x][y] == 2 or maze[x][y] == 3 or maze[x][y] == 4:
+                        maze[x][y] = 0
+
+            if isinstance(agent.fsm.currentState, PathfindingState):
+                continue
+
+            if isinstance(agent.fsm.currentState, WaitState):
+                agent.activate()
+                continue
+
+            path = agent.path
+
+            if path is not None:
+                pathlist = [list(i) for i in path]
+
+            print_maze(path)
+
+        if active:
+            inputActive = True
+
+        while inputActive:
+            userInput = input('-->')
+            if userInput == "left" or userInput == "right" or userInput == "up" or userInput == "down":
+                player.userInput = userInput
+                if player.ParseInput():
+                    inputActive = False
+                else:
+                    print('Move not possible, try again..')
+            elif userInput == "exit":
+                active = False
                 inputActive = False
             else:
-                print('Move not possible, try again..')
-        elif userInput == "exit":
-            active = False
-            inputActive = False
-        else:
-            print('invalid command, try again')
+                print('invalid command, try again')
+            turns += 1
 
-#print(pathList)
-#print(path)
+print('YOU SURVIVED FOR ' + str(turns) + ' TURNS!!!!!')
+print('..............................................')
