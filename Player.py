@@ -15,23 +15,23 @@ class Player(object):
 
     def ParseInput(self):
         if self.userInput == 'left':
-            if not self.CheckMovementInput(self.x - 1, self.y):
+            if not self.CheckMovementInput(self.x, self.y - 1):
                 return False
-            self.x -= 1
+            self.y -= 1
             return True
         elif self.userInput == 'right':
-            if not self.CheckMovementInput(self.x + 1, self.y):
-                return False
-            self.x += 1
-            return True
-        elif self.userInput == 'up':
             if not self.CheckMovementInput(self.x, self.y + 1):
                 return False
             self.y += 1
             return True
-        elif self.userInput == 'down':
-            if not self.CheckMovementInput(self.x, self.y - 1):
+        elif self.userInput == 'up':
+            if not self.CheckMovementInput(self.x - 1, self.y):
                 return False
-            self.y -= 1
+            self.x -= 1
+            return True
+        elif self.userInput == 'down':
+            if not self.CheckMovementInput(self.x + 1, self.y):
+                return False
+            self.x += 1
             return True
 

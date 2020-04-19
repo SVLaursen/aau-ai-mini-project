@@ -20,6 +20,7 @@
 from AStar import *
 from MapConversion import *
 from Player import *
+from Agent import *
 
 
 maze = [
@@ -45,19 +46,40 @@ player.world = maze
 player.x = 7
 player.y = 5
 
+#Set the agent
+agent = Agent()
+agent.__init__()
+agent.world = maze
+
 active = True
 inputActive = False
 
+#Start runtime loop
 while active:
+
+    #Executing agent behaviour
+    agent.execute()
+    agent.target = (player.x, player.y)
+
     if inputActive == False:
         # Clean the map before usage
         for x in range(len(maze)):
             for y in range(len(maze[x])):
-                if maze[x][y] == 2 or maze[x][y] == 3:
+                if maze[x][y] == 2 or maze[x][y] == 3 or maze[x][y] == 4:
                     maze[x][y] = 0
 
-        path = AStar(maze, start, (player.x, player.y))
-        pathlist = [list(i) for i in path]
+        if isinstance(agent.fsm.currentState, MoveState):
+            continue
+
+        if isinstance(agent.fsm.currentState, WaitState):
+            agent.activate()
+            continue
+
+        #path = AStar(maze, start, (player.x, player.y))
+        path = agent.path
+
+        if path is not None:
+            pathlist = [list(i) for i in path]
 
         #Create the map to print
         for x in range(len(maze)):
@@ -67,11 +89,15 @@ while active:
                 elif maze[x][y] == 3 and x != player.x and y != player.y:
                     maze[x][y] = 0
 
-                for i in range(len(pathlist)):
-                    if x == pathlist[i][0] and y == pathlist[i][1] and maze[x][y] != 3:
-                        maze[x][y] = 2
+                if path is not None:
+                    for i in range(len(pathlist)):
+                        if x == pathlist[i][0] and y == pathlist[i][1] and maze[x][y] != 3:
+                            maze[x][y] = 2
 
+                if x == agent.x and y == agent.y:
+                    maze[x][y] = 4
 
+        #Print the map
         for i in range(len(maze)):
             print(maze[i])
 
@@ -83,12 +109,13 @@ while active:
             player.userInput = userInput
             if player.ParseInput():
                 inputActive = False
-        else:
-            print('invalid command, try again')
-
-        if userInput == "exit":
+            else:
+                print('Move not possible, try again..')
+        elif userInput == "exit":
             active = False
             inputActive = False
+        else:
+            print('invalid command, try again')
 
 #print(pathList)
 #print(path)
