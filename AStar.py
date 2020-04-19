@@ -24,6 +24,8 @@ def AStar(maze, start, end):
     openList.append(startNode)
 
     while len(openList) > 0:
+        print('calculating a*')
+
         currentNode = openList[0]
         currentIndex = 0
 
