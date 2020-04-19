@@ -5,14 +5,10 @@
 # 5: Agent moves one tile towards the player
 # 6: Agent goes into waiting state again and the cycle continues unless a goal has been met
 
-# Player Goal: To survive in the map without getting caught by the agent until the round limit is achieved
-# Agent Goal: To catch the player before the turn limit is up
-
-# A = Agent, P = Player, # = Border, * = Path point, ^ = Obstacle
-
 from MapConversion import *
 from Player import *
 from Agent import *
+from colorama import Fore, Style
 
 def print_maze(path = None):
     # Create the map to print
@@ -40,8 +36,9 @@ def print_maze(path = None):
     for i in range(len(prettyMaze)):
         print(prettyMaze[i])
 
-print('Welcome to this showcase of the A* algorithm and Finite State Machine')
+print(Fore.GREEN + 'Welcome to this showcase of the A* algorithm and Finite State Machine')
 print('write start to start, exit to exit, and help if you want to know more')
+print(Style.RESET_ALL)
 
 inMenu = True
 terminate = False
@@ -55,13 +52,15 @@ while inMenu:
         terminate = True
         inMenu = False
     elif menuInput == "help":
-        print('play the game by writen: up, down, left, or right to move around')
+        print(Fore.YELLOW + 'play the game by writen: up, down, left, or right to move around')
         print('the goal is not to get caught by the agent, marked with an A')
         print('you play as the P on the map')
         print('# marks obstacles')
         print('good luck')
+        print(Style.RESET_ALL)
     else:
-        print('!!Error on input, try a different command!!')
+        print(Fore.RED + '!!Error on input, try a different command!!')
+        print(Style.RESET_ALL)
 
 
 if not terminate:
@@ -112,7 +111,8 @@ if not terminate:
         if inputActive == False:
             #Check if the agent has caught the player
             if agent.x == player.x and agent.y == player.y:
-                print('AGENT HAS CAUGHT YOU, GAME OVER!')
+                print(Fore.RED + 'AGENT HAS CAUGHT YOU, GAME OVER!')
+                print(Style.RESET_ALL)
                 active = False
 
             # Clean the map before usage
@@ -145,13 +145,16 @@ if not terminate:
                 if player.ParseInput():
                     inputActive = False
                 else:
-                    print('Move not possible, try again..')
+                    print(Fore.RED + 'Move not possible, try again..')
+                    print(Style.RESET_ALL)
             elif userInput == "exit":
                 active = False
                 inputActive = False
             else:
-                print('invalid command, try again')
+                print(Fore.RED + 'invalid command, try again')
+                print(Style.RESET_ALL)
             turns += 1
 
-print('YOU SURVIVED FOR ' + str(turns) + ' TURNS!!!!!')
+print(Fore.YELLOW + 'YOU SURVIVED FOR ' + str(turns) + ' TURNS!!!!!')
+print(Style.RESET_ALL)
 print('..............................................')
